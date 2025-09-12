@@ -1,0 +1,106 @@
+/* Card container */
+.post-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  /* Hover effect for cards */
+  .post-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Media container to allow overlay */
+  .media-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+  
+  /* Media (image/video) */
+  .media-container img,
+  .media-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Overlay text on media */
+  .media-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+    color: #fff;
+    padding: 0.5rem 1rem;
+  }
+  
+  .media-overlay h5 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
+  
+  .media-overlay p {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+  
+  /* Truncate long description text */
+  .text-truncate {
+    display: -webkit-box;
+    -webkit-line-clamp: 4; 
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Card footer styling */
+  .post-card .card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    font-size: 0.85rem;
+  }
+  
+  .post-card .card-footer a {
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  
+  .post-card .card-footer a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+  }
+  
+  /* Buttons */
+  .post-card .btn {
+    transition: background-color 0.2s, transform 0.2s;
+  }
+  
+  .post-card .btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .media-container {
+      height: 180px;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .media-container {
+      height: 150px;
+    }
+  }
+  
