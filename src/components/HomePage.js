@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Card, Button, Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import "../cssComponent/HomePages.css";
 
 const HomePage = () => {
+  const { category } = useParams();
   const [posts, setPosts] = useState([]);
+  const [expandedPosts, setExpandedPosts] = useState({});
 
-  // Fetch posts and sort descending (latest first)
+  // Fetch posts
   useEffect(() => {
+    let url = "http://localhost:8080/api/posts/blog";
+    if (category) {
+      url = `http://localhost:8080/api/posts/blog/category/${category}`;
+    }
+
     axios
-      .get("http://localhost:8080/api/posts/blog")
+      .get(url)
       .then((res) => {
         const sorted = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -18,9 +25,8 @@ const HomePage = () => {
         setPosts(sorted);
       })
       .catch((err) => console.error("Error fetching posts:", err));
-  }, []);
+  }, [category]);
 
-  // Helper to get full media URL
   const getMediaUrl = (filePath) => {
     if (!filePath) return null;
     return filePath.startsWith("/")
@@ -28,40 +34,57 @@ const HomePage = () => {
       : `http://localhost:8080/uploads/${filePath}`;
   };
 
+  const toggleExpand = (id) => {
+    setExpandedPosts((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
+  // Handle Like
+  const handleLike = (id) => {
+    axios
+      .put(`http://localhost:8080/api/posts/blog/${id}/like`)
+      .then((res) => {
+        setPosts((prev) =>
+          prev.map((post) =>
+            post.id === id ? { ...post, likes: res.data.likes } : post
+          )
+        );
+      })
+      .catch((err) => console.error("Error liking post:", err));
+  };
+
   return (
     <Container className="mt-5">
-      <h2 className="mb-4 text-center">Latest Posts</h2>
+      <h2 className="mb-4 text-center">
+        {category ? `${category} Posts` : "Latest Posts"}
+      </h2>
       <Row>
         {posts.map((post) => {
           const imageUrl = getMediaUrl(post.imagePath);
           const videoUrl = getMediaUrl(post.videoPath);
+          const isExpanded = expandedPosts[post.id] || false;
 
           return (
             <Col md={4} sm={6} xs={12} key={post.id} className="mb-4">
               <Card className="h-100 shadow-sm post-card">
-
-                {/* Media container with overlay */}
+                {/* Media */}
                 <div className="media-container">
-                  {/* Show video thumbnail if video exists, otherwise image */}
                   {videoUrl ? (
-                    <video
-                      controls
-                      className="post-image"
-                      poster={imageUrl || "https://via.placeholder.com/400x200?text=Video"}
-                      style={{ objectFit: "cover" }}
-                    >
+                    <video controls className="post-image" poster={imageUrl}>
                       <source src={videoUrl} type="video/mp4" />
-                      Your browser does not support the video tag.
                     </video>
                   ) : (
                     <img
-                      src={imageUrl || "https://via.placeholder.com/400x200?text=No+Image"}
+                      src={
+                        imageUrl ||
+                        "https://via.placeholder.com/400x200?text=No+Image"
+                      }
                       alt={post.title}
                       className="post-image"
                     />
                   )}
-
-                  {/* Overlay text */}
                   <div className="media-overlay">
                     <h5>{post.title}</h5>
                     <p>{post.category}</p>
@@ -70,20 +93,38 @@ const HomePage = () => {
 
                 {/* Card body */}
                 <Card.Body className="d-flex flex-column">
-                  <Card.Text className="flex-grow-1 text-truncate">
-                    {post.description}
+                  <Card.Text className="flex-grow-1">
+                    {isExpanded
+                      ? post.description
+                      : `${post.description?.substring(0, 120)}...`}
                   </Card.Text>
+
+                  <Button
+                    onClick={() => toggleExpand(post.id)}
+                    variant="link"
+                    className="p-0 text-primary"
+                  >
+                    {isExpanded ? "Show Less" : "Read More"}
+                  </Button>
+
+                  <Button
+                    onClick={() => handleLike(post.id)}
+                    variant="outline-danger"
+                    className="mt-2"
+                  >
+                    ❤️ {post.likes || 0}
+                  </Button>
+
                   <Button
                     as={Link}
-                    to={`/category/${post.category.toLowerCase()}/post/${post.id}`}
+                    to={`/post/${post.id}`}
                     variant="primary"
                     className="mt-2"
                   >
-                    Read More
+                    View Full Post
                   </Button>
                 </Card.Body>
 
-                {/* Card footer */}
                 <Card.Footer className="text-muted d-flex justify-content-between align-items-center">
                   <small>
                     <Link
@@ -95,7 +136,6 @@ const HomePage = () => {
                   </small>
                   <small>{new Date(post.createdAt).toLocaleDateString()}</small>
                 </Card.Footer>
-
               </Card>
             </Col>
           );
