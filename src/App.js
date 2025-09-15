@@ -7,6 +7,7 @@ import PostForm from "./components/PostForm";
 import PostEdit from "./components/PostEdit";
 import ContactForm from "./components/ContactForm";
 // import CategoryPage from "./components/CategoryPage";
+import PostDetails from "./components/PostDetails";
 
 function App() {
   // Optional callback for newly created posts
@@ -30,6 +31,7 @@ function App() {
   <Route path="/new" element={<PostForm onPostCreated={handlePostCreated} />} />
   <Route path="/edit/:id" element={<PostEdit />} />
   <Route path="/contact" element={<ContactForm />} />
+   <Route path="/post/:id" element={<PostDetails />} />
 </Routes>
         </main>
 

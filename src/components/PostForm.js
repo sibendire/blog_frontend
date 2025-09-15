@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 function PostForm({ onPostCreated }) {
   const [title, setTitle] = useState("");
@@ -10,6 +12,10 @@ function PostForm({ onPostCreated }) {
 
   const [imagePreview, setImagePreview] = useState(null);
   const [videoPreview, setVideoPreview] = useState(null);
+
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -47,18 +53,32 @@ function PostForm({ onPostCreated }) {
       setVideo(null);
       setImagePreview(null);
       setVideoPreview(null);
+
+      // ✅ Show success popup
+      setShowSuccess(true);
     } catch (error) {
       console.error("Error uploading post:", error);
       alert("Failed to create post. Check console for details.");
     }
   };
 
+  // ✅ Auto redirect after 2 seconds when success is shown
+  useEffect(() => {
+    if (showSuccess) {
+      const timer = setTimeout(() => {
+        setShowSuccess(false);
+        navigate("/");
+      }, 2000); // 2 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [showSuccess, navigate]);
+
   return (
     <div className="container mt-4">
       <div className="card shadow-lg p-4 rounded-3">
         <h2 className="text-center mb-4">✍️ Create New Post</h2>
         <form onSubmit={handleSubmit}>
-          
           {/* Title */}
           <div className="mb-3">
             <label className="form-label fw-semibold">Title</label>
@@ -106,7 +126,6 @@ function PostForm({ onPostCreated }) {
 
           {/* File Uploads */}
           <div className="row">
-            {/* Image */}
             <div className="col-md-6 mb-3">
               <label className="form-label fw-semibold">Image</label>
               <input
@@ -125,7 +144,6 @@ function PostForm({ onPostCreated }) {
               )}
             </div>
 
-            {/* Video */}
             <div className="col-md-6 mb-3">
               <label className="form-label fw-semibold">Video</label>
               <input
@@ -154,6 +172,17 @@ function PostForm({ onPostCreated }) {
           </div>
         </form>
       </div>
+
+      {/* ✅ Success Popup Modal */}
+      <Modal show={showSuccess} centered>
+        <Modal.Header>
+          <Modal.Title>✅ Post Created</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Your post has been successfully submitted! <br />
+          <small>(Redirecting to homepage...)</small>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

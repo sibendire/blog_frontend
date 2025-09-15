@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
-const PostDetail = () => {
+const PostDetails = () => {
   const { id } = useParams();
   const [post, setPost] = useState(null);
 
@@ -51,4 +51,4 @@ const PostDetail = () => {
   );
 };
 
-export default PostDetail;
+export default PostDetails;
