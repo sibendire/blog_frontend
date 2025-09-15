@@ -99,13 +99,13 @@ const HomePage = () => {
                       : `${post.description?.substring(0, 120)}...`}
                   </Card.Text>
 
-                  <Button
+                  {/* <Button
                     onClick={() => toggleExpand(post.id)}
                     variant="link"
                     className="p-0 text-primary"
                   >
-                    {isExpanded ? "Show Less" : "Read More"}
-                  </Button>
+                  //  {isExpanded ? "Show Less" : "Read More"}
+                  </Button> */}
 
                   <Button
                     onClick={() => handleLike(post.id)}
