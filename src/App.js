@@ -6,9 +6,10 @@ import PostList from "./components/PostList";
 import PostForm from "./components/PostForm";
 import PostEdit from "./components/PostEdit";
 import ContactForm from "./components/ContactForm";
-// import CategoryPage from "./components/CategoryPage";
+ import TopBar from "./components/TopBar";
 import PostDetails from "./components/PostDetails";
 
+import LatestSidebar from "./components/LatestSidebar";
 function App() {
   // Optional callback for newly created posts
   const handlePostCreated = (post) => {
@@ -20,8 +21,9 @@ function App() {
     <div className="d-flex flex-column min-vh-100">
       <Router>
         {/* Navbar */}
+         <TopBar />
         <CollapsibleBlog />
-
+      <LatestSidebar/>
         {/* Main content */}
         <main className="flex-grow-1">
         <Routes>

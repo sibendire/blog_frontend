@@ -1,0 +1,22 @@
+.top-bar {
+  background-color: #f1f1f1;
+  font-size: 0.85rem;
+  padding: 4px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.top-bar small {
+  color: #555;
+  font-weight: 500;
+}
+
+.social-icon {
+  margin-left: 12px;
+  color: #555;
+  transition: color 0.2s;
+  font-size: 0.9rem;
+}
+
+.social-icon:hover {
+  color: #d62828; /* Nile Post red accent */
+}
