@@ -11,6 +11,19 @@ const PostDetails = () => {
 
   const currentUrl = window.location.origin + location.pathname;
 
+  // Detect mobile device
+  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // Share URLs
+  const getFacebookShareUrl = () => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+  const getTwitterShareUrl = () => `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(currentUrl)}`;
+  const getWhatsAppShareUrl = () => {
+    const message = `${post.title} - ${currentUrl}`;
+    return isMobile()
+      ? `whatsapp://send?text=${encodeURIComponent(message)}`
+      : `https://web.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+  };
+
   useEffect(() => {
     axios
       .get(`http://localhost:8080/api/posts/blog/${id}`)
@@ -83,62 +96,47 @@ const PostDetails = () => {
         </div>
 
         {/* Share Buttons */}
-        <div className="share-buttons">
-          <span>Share:</span>
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`}
-            target="_blank"
-            rel="noreferrer"
-            className="share-btn facebook"
-          >
+        <div className="share-buttons mt-4">
+          <h6>Share this post:</h6>
+          <a href={getFacebookShareUrl()} target="_blank" rel="noreferrer" className="btn btn-primary me-2">
             Facebook
           </a>
-          <a
-            href={`https://twitter.com/intent/tweet?url=${currentUrl}&text=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noreferrer"
-            className="share-btn twitter"
-          >
+          <a href={getTwitterShareUrl()} target="_blank" rel="noreferrer" className="btn btn-info me-2" style={{ color: "#fff" }}>
             Twitter
           </a>
-          <a
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(post.title + " " + currentUrl)}`}
-            target="_blank"
-            rel="noreferrer"
-            className="share-btn whatsapp"
-          >
+          <a href={getWhatsAppShareUrl()} target="_blank" rel="noreferrer" className="btn btn-success">
             WhatsApp
           </a>
         </div>
-      </div>
 
-      {/* Related Posts */}
-      {relatedPosts.length > 0 && (
-        <div className="related-posts">
-          <h3>Related Posts</h3>
-          <div className="related-grid">
-            {relatedPosts.map((rel) => (
-              <div key={rel.id} className="related-card">
-                {rel.imagePath && (
-                  <img
-                    src={`http://localhost:8080${rel.imagePath}`}
-                    alt={rel.title}
-                    className="related-img"
-                  />
-                )}
-                <div className="related-info">
-                  <Link to={`/post/${rel.id}`} className="related-title">
-                    {rel.title}
-                  </Link>
-                  <p className="related-meta">
-                    {new Date(rel.createdAt).toLocaleDateString()}
-                  </p>
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <div className="related-posts">
+            <h3>Related Posts</h3>
+            <div className="related-grid">
+              {relatedPosts.map((rel) => (
+                <div key={rel.id} className="related-card">
+                  {rel.imagePath && (
+                    <img
+                      src={`http://localhost:8080${rel.imagePath}`}
+                      alt={rel.title}
+                      className="related-img"
+                    />
+                  )}
+                  <div className="related-info">
+                    <Link to={`/post/${rel.id}`} className="related-title">
+                      {rel.title}
+                    </Link>
+                    <p className="related-meta">
+                      {new Date(rel.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
