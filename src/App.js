@@ -8,33 +8,33 @@ import PostEdit from "./components/PostEdit";
 import ContactForm from "./components/ContactForm";
  import TopBar from "./components/TopBar";
 import PostDetails from "./components/PostDetails";
+import "./App.css";
 
 import LatestSidebar from "./components/LatestSidebar";
 function App() {
-  // Optional callback for newly created posts
   const handlePostCreated = (post) => {
     console.log("New post created:", post);
-    // You can also refresh post lists if needed
   };
 
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="App d-flex flex-column min-vh-100">
       <Router>
         {/* Navbar */}
-         <TopBar />
+        <TopBar />
         <CollapsibleBlog />
-      <LatestSidebar/>
+        <LatestSidebar />
+
         {/* Main content */}
         <main className="flex-grow-1">
-        <Routes>
-  <Route path="/" element={<HomePage />} />
-  <Route path="/category/:category" element={<HomePage />} />
-  <Route path="/posts" element={<PostList />} />
-  <Route path="/new" element={<PostForm onPostCreated={handlePostCreated} />} />
-  <Route path="/edit/:id" element={<PostEdit />} />
-  <Route path="/contact" element={<ContactForm />} />
-   <Route path="/post/:id" element={<PostDetails />} />
-</Routes>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/category/:category" element={<HomePage />} />
+            <Route path="/posts" element={<PostList />} />
+            <Route path="/new" element={<PostForm onPostCreated={handlePostCreated} />} />
+            <Route path="/edit/:id" element={<PostEdit />} />
+            <Route path="/contact" element={<ContactForm />} />
+            <Route path="/post/:id" element={<PostDetails />} />
+          </Routes>
         </main>
 
         {/* Footer */}
@@ -43,5 +43,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;

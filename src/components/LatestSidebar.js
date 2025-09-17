@@ -10,7 +10,7 @@ const LatestSidebar = ({ posts = [], getMediaUrl }) => { // default to empty arr
   };
 
   if (!posts || posts.length === 0) {
-    return <p className="text-center text-light">Loading...</p>; // show loading if posts undefined or empty
+    return <p className="text-center text-light"></p>; // show loading if posts undefined or empty
   }
 
   return (
