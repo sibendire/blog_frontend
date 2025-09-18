@@ -1,8 +1,8 @@
-// src/components/HomePage.js
 import React, { useEffect, useState } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
+import { FaWhatsapp } from "react-icons/fa"; 
 import "../cssComponent/HomePages.css";
 
 const HomePage = () => {
@@ -29,6 +29,18 @@ const HomePage = () => {
         ? `http://localhost:8080${filePath}`
         : `http://localhost:8080/uploads/${filePath}`
       : null;
+
+  // Detect if mobile
+  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // WhatsApp contact button
+  const getWhatsAppUrl = () => {
+    const phoneNumber = "256700000000"; // Replace with company WhatsApp number
+    const message = "Hello, I would like to inquire about your services.";
+    return isMobile()
+      ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+      : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+  };
 
   if (posts.length === 0) return <p className="text-center">Loading...</p>;
 
@@ -131,6 +143,18 @@ const HomePage = () => {
           </div>
         </Col>
       </Row>
+
+      {/* Floating WhatsApp Contact Button */}
+      <div className="floating-whatsapp">
+        <a
+          href={getWhatsAppUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="whatsapp-float-btn"
+        >
+          <FaWhatsapp />
+        </a>
+      </div>
 
       {/* SECTION 2 - Trending / Recently / Latest */}
       <Row className="mt-5 section2">

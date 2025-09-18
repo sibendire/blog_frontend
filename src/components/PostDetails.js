@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../cssComponent/PostDetails.css";
+import { FaFacebookF, FaTwitter, FaWhatsapp } from "react-icons/fa";
 
 const PostDetails = () => {
   const { id } = useParams();
@@ -10,19 +11,6 @@ const PostDetails = () => {
   const [relatedPosts, setRelatedPosts] = useState([]);
 
   const currentUrl = window.location.origin + location.pathname;
-
-  // Detect mobile device
-  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  // Share URLs
-  const getFacebookShareUrl = () => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
-  const getTwitterShareUrl = () => `https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(currentUrl)}`;
-  const getWhatsAppShareUrl = () => {
-    const message = `${post.title} - ${currentUrl}`;
-    return isMobile()
-      ? `whatsapp://send?text=${encodeURIComponent(message)}`
-      : `https://web.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-  };
 
   useEffect(() => {
     axios
@@ -47,6 +35,29 @@ const PostDetails = () => {
     axios
       .put(`http://localhost:8080/api/posts/blog/${id}/like`)
       .then((res) => setPost((prev) => ({ ...prev, likes: res.data.likes })));
+  };
+
+  // Detect mobile device
+  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  // Share URLs
+  const getFacebookShareUrl = () => {
+    const url = encodeURIComponent(currentUrl);
+    return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+  };
+
+  const getTwitterShareUrl = () => {
+    const text = encodeURIComponent(post?.title || "");
+    const url = encodeURIComponent(currentUrl);
+    return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+  };
+
+  const getWhatsAppShareUrl = () => {
+    const companyNumber = "256700000000"; // <- Replace with company WhatsApp number
+    const message = `${post?.title} - ${currentUrl}`;
+    return isMobile()
+      ? `https://wa.me/${companyNumber}?text=${encodeURIComponent(message)}`
+      : `https://web.whatsapp.com/send?phone=${companyNumber}&text=${encodeURIComponent(message)}`;
   };
 
   if (!post) return <div className="loading">Loading...</div>;
@@ -80,7 +91,10 @@ const PostDetails = () => {
         {post.videoPath && (
           <div className="post-video">
             <video controls>
-              <source src={`http://localhost:8080${post.videoPath}`} type="video/mp4" />
+              <source
+                src={`http://localhost:8080${post.videoPath}`}
+                type="video/mp4"
+              />
             </video>
           </div>
         )}
@@ -94,49 +108,63 @@ const PostDetails = () => {
             ← Back to Home
           </Link>
         </div>
-
-        {/* Share Buttons */}
-        <div className="share-buttons mt-4">
-          <h6>Share this post:</h6>
-          <a href={getFacebookShareUrl()} target="_blank" rel="noreferrer" className="btn btn-primary me-2">
-            Facebook
-          </a>
-          <a href={getTwitterShareUrl()} target="_blank" rel="noreferrer" className="btn btn-info me-2" style={{ color: "#fff" }}>
-            Twitter
-          </a>
-          <a href={getWhatsAppShareUrl()} target="_blank" rel="noreferrer" className="btn btn-success">
-            WhatsApp
-          </a>
-        </div>
-
-        {/* Related Posts */}
-        {relatedPosts.length > 0 && (
-          <div className="related-posts">
-            <h3>Related Posts</h3>
-            <div className="related-grid">
-              {relatedPosts.map((rel) => (
-                <div key={rel.id} className="related-card">
-                  {rel.imagePath && (
-                    <img
-                      src={`http://localhost:8080${rel.imagePath}`}
-                      alt={rel.title}
-                      className="related-img"
-                    />
-                  )}
-                  <div className="related-info">
-                    <Link to={`/post/${rel.id}`} className="related-title">
-                      {rel.title}
-                    </Link>
-                    <p className="related-meta">
-                      {new Date(rel.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Floating Share Buttons */}
+      <div className="floating-share-buttons">
+        <a
+          href={getFacebookShareUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-btn facebook"
+        >
+          <FaFacebookF />
+        </a>
+        <a
+          href={getTwitterShareUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-btn twitter"
+        >
+          <FaTwitter />
+        </a>
+        <a
+          href={getWhatsAppShareUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="share-btn whatsapp"
+        >
+          <FaWhatsapp />
+        </a>
+      </div>
+
+      {/* Related Posts */}
+      {relatedPosts.length > 0 && (
+        <div className="related-posts">
+          <h3>Related Posts</h3>
+          <div className="related-grid">
+            {relatedPosts.map((rel) => (
+              <div key={rel.id} className="related-card">
+                {rel.imagePath && (
+                  <img
+                    src={`http://localhost:8080${rel.imagePath}`}
+                    alt={rel.title}
+                    className="related-img"
+                  />
+                )}
+                <div className="related-info">
+                  <Link to={`/post/${rel.id}`} className="related-title">
+                    {rel.title}
+                  </Link>
+                  <p className="related-meta">
+                    {new Date(rel.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
