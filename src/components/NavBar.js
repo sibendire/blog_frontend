@@ -60,8 +60,11 @@ function CollapsibleBlog() {
           </Nav>
 
           <Nav className="nav-right">
-            <Nav.Link as={Link} to="/about">
-              About
+         <Nav.Link as={Link} to="/signup">
+              creat Account
+            </Nav.Link>
+             <Nav.Link as={Link} to="/login">
+              Login
             </Nav.Link>
             <Nav.Link as={Link} to="/contact">
               Contact

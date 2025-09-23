@@ -9,6 +9,8 @@ import ContactForm from "./components/ContactForm";
  import TopBar from "./components/TopBar";
 import PostDetails from "./components/PostDetails";
 import "./App.css";
+ import Signup from "./components/Signup";
+  import LoginForm from "./components/LoginForm";
 
 import LatestSidebar from "./components/LatestSidebar";
 function App() {
@@ -34,6 +36,8 @@ function App() {
             <Route path="/edit/:id" element={<PostEdit />} />
             <Route path="/contact" element={<ContactForm />} />
             <Route path="/post/:id" element={<PostDetails />} />
+             <Route path="/signup" element={<Signup />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
         </main>
 
