@@ -10,8 +10,7 @@ import ContactForm from "./components/ContactForm";
 import PostDetails from "./components/PostDetails";
 import "./App.css";
  import Signup from "./components/Signup";
-  import LoginForm from "./components/LoginForm";
-
+import LoginForm from "./components/LoginForm"; // ✅
 import LatestSidebar from "./components/LatestSidebar";
 function App() {
   const handlePostCreated = (post) => {
