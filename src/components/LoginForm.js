@@ -5,9 +5,12 @@ const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMessage("");
     try {
       const response = await axios.post("http://localhost:8080/api/auth/login", {
         email,
@@ -16,42 +19,66 @@ const LoginForm = () => {
 
       if (response.data.success) {
         setMessage("Login successful!");
-        // Save user info or JWT to localStorage if needed
         localStorage.setItem("user", JSON.stringify(response.data.user));
+        // Redirect if needed
       } else {
-        setMessage(response.data.message);
+        setMessage(response.data.message || "Login failed.");
       }
     } catch (error) {
       console.error(error);
       setMessage("Server error. Try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto" }}>
-      <h2>Login</h2>
-      {message && <p>{message}</p>}
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
+      <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px" }}>
+        <h3 className="text-center mb-4">Login</h3>
+
+        {message && (
+          <div
+            className={`alert ${
+              message.toLowerCase().includes("successful") ? "alert-success" : "alert-danger"
+            }`}
+          >
+            {message}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin}>
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              className="form-control"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
+
+        <p className="text-center mt-3 mb-0">
+          Don't have an account? <a href="/signup">Sign Up</a>
+        </p>
+      </div>
     </div>
   );
 };
