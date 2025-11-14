@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
+import { FaTwitter, FaInstagram } from "react-icons/fa";
+import { SiTiktok } from "react-icons/si"; // ✅ Import TikTok icon
 import "../cssComponent/TopBar.css";
 
 const TopBar = () => {
@@ -23,13 +24,28 @@ const TopBar = () => {
 
           {/* Right: Social Icons */}
           <Col xs={12} md={6} className="text-md-end text-center">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer" className="social-icon">
-              <FaFacebookF />
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="social-icon">
+            <a
+              href="https://x.com/SibendireK/status/1972179663381561846?t=dYrvsImnCuXK8mArOvSZBg&s=08"
+              target="_blank"
+              rel="noreferrer"
+              className="social-icon"
+            >
               <FaTwitter />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noreferrer" className="social-icon">
+            <a
+              href="https://vm.tiktok.com/ZMAaBer6q/"
+              target="_blank"
+              rel="noreferrer"
+              className="social-icon"
+            >
+              <SiTiktok /> {/* ✅ Correct TikTok icon */}
+            </a>
+            <a
+              href="https://instagram.com/yourprofile"
+              target="_blank"
+              rel="noreferrer"
+              className="social-icon"
+            >
               <FaInstagram />
             </a>
           </Col>
@@ -40,4 +56,3 @@ const TopBar = () => {
 };
 
 export default TopBar;
-

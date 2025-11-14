@@ -35,11 +35,11 @@ const Signup = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px" }}>
+    <div className="d-flex align-items-center justify-content-center bg-gray">
+      <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px",marginBottom:"24px"}}>
         <h3 className="text-center mb-4">Create Account</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
+        <form onSubmit={handleSubmit}className="text-start">
+          <div className="md-0">
             <label className="form-label">First Name</label>
             <input
               className="form-control"

@@ -35,7 +35,7 @@ const HomePage = () => {
 
   // WhatsApp contact button
   const getWhatsAppUrl = () => {
-    const phoneNumber = "256700000000"; // Replace with company WhatsApp number
+    const phoneNumber = "256771236219"; // Replace with company WhatsApp number
     const message = "Hello, I would like to inquire about your services.";
     return isMobile()
       ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
@@ -128,6 +128,7 @@ const HomePage = () => {
                       alt={post.title}
                       className="side-featured-img"
                     />
+                    {/*  */}
                   </Col>
                   <Col xs={7}>
                     <Link to={`/post/${post.id}`} className="side-featured-title">

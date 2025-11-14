@@ -1,4 +1,4 @@
-import "../css/PostCard.css";
+// import "../css/PostCard.css";
 
 function PostCard({ post, onLike }) {
   return (

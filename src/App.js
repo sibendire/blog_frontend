@@ -21,7 +21,7 @@ function App() {
     <div className="App d-flex flex-column min-vh-100">
       <Router>
         {/* Navbar */}
-        <TopBar />
+        {/* <TopBar /> */}
         <CollapsibleBlog />
         <LatestSidebar />
 

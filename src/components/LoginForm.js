@@ -33,8 +33,8 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px" }}>
+    <div className="d-flex align-items-center justify-content-center vh-100 bg-light"style={{marginTop:"-24px"}}>
+      <div className="card shadow-lg p-4" style={{ width: "400px", borderRadius: "15px"}}>
         <h3 className="text-center mb-4">Login</h3>
 
         {message && (
@@ -47,7 +47,7 @@ const LoginForm = () => {
           </div>
         )}
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin}className="text-start">
           <div className="mb-3">
             <label className="form-label">Email</label>
             <input

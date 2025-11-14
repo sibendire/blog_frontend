@@ -1,17 +1,6 @@
+
 import React, { useState } from "react";
-import {
-  MDBInput,
-  MDBCheckbox,
-  MDBBtn,
-  MDBTextArea,
-  MDBCard,
-  MDBCardBody,
-  MDBCardTitle,
-  MDBContainer,
-  MDBSpinner,
-  MDBRow,
-  MDBCol,
-} from "mdb-react-ui-kit";
+import "../cssComponent/ContactForm.css"; // We'll use a separate CSS file
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -21,9 +10,6 @@ export default function ContactForm() {
     message: "",
     copy: false,
   });
-
-  const [loading, setLoading] = useState(false);
-  const [feedback, setFeedback] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -35,115 +21,98 @@ export default function ContactForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setFeedback(null);
-
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      setFeedback({ type: "success", message: "Message sent successfully!" });
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-        copy: false,
-      });
-    }, 1500);
+    console.log("Form submitted", formData);
+    alert("Form submitted!");
+    setFormData({ name: "", email: "", subject: "", message: "", copy: false });
   };
 
   return (
-    <div
-      className="py-5"
-      style={{
-        background: "linear-gradient(135deg, #f8f9fa, #e9ecef)",
-        minHeight: "80vh",
-      }}
-    >
-      <MDBContainer>
-        <MDBRow className="justify-content-center align-items-center">
-          <MDBCol md="8" sm="12">
-            <MDBCard className="shadow-lg rounded-4 p-4">
-              <MDBCardBody>
-                <MDBCardTitle className="text-center mb-4">
-                  <h2 className="fw-bold text-primary">📩 Contact Us</h2>
-                  <p className="text-muted mb-0">
-                    Have a question or feedback? Fill out the form and we'll get back to you shortly.
-                  </p>
-                </MDBCardTitle>
+    <div className="contact-container">
+      <h2 className="section-title">📩 Contact Us</h2>
+      <p className="text-dark">
+        Have a question or feedback? Fill out the form and we'll get back to you
+        shortly.
+      </p>
 
-                {feedback && (
-                  <div
-                    className={`alert alert-${feedback.type === "success" ? "success" : "danger"} text-center rounded-3`}
-                    role="alert"
-                  >
-                    {feedback.message}
-                  </div>
-                )}
+      <form onSubmit={handleSubmit}>
+        <div className="mb-2">
+          <label htmlFor="name" className="form-label">
+            Full Name
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </div>
 
-                <form onSubmit={handleSubmit}>
-                  <MDBInput
-                    name="name"
-                    label="Full Name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    wrapperClass="mb-3"
-                    required
-                  />
+        <div className="mb-2">
+          <label htmlFor="email" className="form-label">
+            Email Address
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
 
-                  <MDBInput
-                    type="email"
-                    name="email"
-                    label="Email Address"
-                    value={formData.email}
-                    onChange={handleChange}
-                    wrapperClass="mb-3"
-                    required
-                  />
+        <div className="mb-2">
+          <label htmlFor="subject" className="form-label">
+            Subject
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            id="subject"
+            name="subject"
+            placeholder="Enter subject"
+            value={formData.subject}
+            onChange={handleChange}
+          />
+        </div>
 
-                  <MDBInput
-                    name="subject"
-                    label="Subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    wrapperClass="mb-3"
-                  />
+        <div className="mb-2">
+          <label htmlFor="message" className="form-label">
+            Message
+          </label>
+          <textarea
+            className="form-control"
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="Write your message here..."
+            value={formData.message}
+            onChange={handleChange}
+          ></textarea>
+        </div>
 
-                  <MDBTextArea
-                    name="message"
-                    label="Message"
-                    rows={5}
-                    value={formData.message}
-                    onChange={handleChange}
-                    wrapperClass="mb-3"
-                    required
-                  />
+        <div className="form-check mb-3">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            id="copyCheck"
+            name="copy"
+            checked={formData.copy}
+            onChange={handleChange}
+          />
+          <label className="form-check-label" htmlFor="copyCheck">
+            Send me a copy of this message
+          </label>
+        </div>
 
-                  <MDBCheckbox
-                    name="copy"
-                    checked={formData.copy}
-                    onChange={handleChange}
-                    wrapperClass="d-flex justify-content-start mb-3"
-                    label="Send me a copy of this message"
-                  />
-
-                  <div className="text-center">
-                    <MDBBtn
-                      color="primary"
-                      size="lg"
-                      className="px-5 w-100"
-                      type="submit"
-                      disabled={loading}
-                    >
-                      {loading ? <MDBSpinner size="sm" grow /> : "Send Message"}
-                    </MDBBtn>
-                  </div>
-                </form>
-              </MDBCardBody>
-            </MDBCard>
-          </MDBCol>
-        </MDBRow>
-      </MDBContainer>
+        <button type="submit" className="btn btn-primary w-100">
+          Submit Message
+        </button>
+      </form>
     </div>
   );
 }

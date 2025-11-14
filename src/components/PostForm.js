@@ -78,10 +78,10 @@ function PostForm({ onPostCreated }) {
     <div className="container mt-4">
       <div className="card shadow-lg p-4 rounded-3">
         <h2 className="text-center mb-4">✍️ Create New Post</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}className="text-start">
           {/* Title */}
           <div className="mb-3">
-            <label className="form-label fw-semibold">Title</label>
+            <label className="form-label fw-semibold text-start">Title</label>
             <input
               type="text"
               className="form-control"
