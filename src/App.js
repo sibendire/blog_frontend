@@ -21,7 +21,7 @@ function App() {
     <div className="App d-flex flex-column min-vh-100">
       <Router>
         {/* Navbar */}
-        {/* <TopBar /> */}
+        <TopBar />
         <CollapsibleBlog />
         <LatestSidebar />
 
@@ -37,6 +37,7 @@ function App() {
             <Route path="/post/:id" element={<PostDetails />} />
              <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<LoginForm />} />
+              {/* <Route path="/login" element={<MediaRenderer  />} /> */}
           </Routes>
         </main>
 

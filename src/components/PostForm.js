@@ -119,6 +119,7 @@ function PostForm({ onPostCreated }) {
               <option value="Health">Health</option>
               <option value="Opinions">Opinions</option>
               <option value="Education">Education</option>
+               <option value="Technology">Technology</option>
               <option value="Sports">Sports</option>
               <option value="Crimes">Crimes</option>
             </select>

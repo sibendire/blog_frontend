@@ -1,13 +1,95 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Card, Container, Row, Col } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
-import { FaWhatsapp } from "react-icons/fa"; 
+import { FaWhatsapp } from "react-icons/fa";
 import "../cssComponent/HomePages.css";
 
+
+/* ---------------------------------------------------------
+   MEDIA RENDERER (image + video support)
+--------------------------------------------------------- */
+const MediaRenderer = ({ imageSrc, videoSrc, className = "", style = {} }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef(null);
+  const isVideo = !!videoSrc;
+
+  const togglePlay = (e) => {
+    e?.stopPropagation();
+    if (!isVideo || !videoRef.current) return;
+
+    if (videoRef.current.paused) {
+      videoRef.current.muted = false; // enable sound
+      videoRef.current.play();
+      setIsPlaying(true);
+    } else {
+      videoRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const overlayStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    background: "rgba(0,0,0,0.45)",
+    padding: "10px 12px",
+    borderRadius: "50%",
+    cursor: "pointer",
+    zIndex: 5
+  };
+
+  const wrapperStyle = {
+    position: "relative",
+    width: "100%",
+    height: "100%",
+    overflow: "hidden",
+    ...style
+  };
+
+  if (isVideo) {
+    return (
+      <div className="media-wrapper" style={wrapperStyle} onClick={togglePlay}>
+        <video
+          ref={videoRef}
+          src={videoSrc}
+          className={className}
+          controls={false}
+          preload="metadata"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+        <div style={overlayStyle}>
+          {isPlaying ? (
+            <span style={{ color: "#fff", fontSize: 20 }}>❚❚</span>
+          ) : (
+            <span style={{ color: "#fff", fontSize: 22 }}>▶</span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={wrapperStyle}>
+      <img
+        src={imageSrc || "https://via.placeholder.com/800x400?text=No+Media"}
+        alt="media"
+        className={className}
+        loading="lazy"
+        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+      />
+    </div>
+  );
+};
+
+/* ---------------------------------------------------------
+   HOME PAGE
+--------------------------------------------------------- */
 const HomePage = () => {
   const [posts, setPosts] = useState([]);
   const location = useLocation();
+
   const query = new URLSearchParams(location.search);
   const categoryFilter = query.get("category")?.toLowerCase();
 
@@ -30,21 +112,19 @@ const HomePage = () => {
         : `http://localhost:8080/uploads/${filePath}`
       : null;
 
-  // Detect if mobile
-  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const isMobile = () =>
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // WhatsApp contact button
   const getWhatsAppUrl = () => {
-    const phoneNumber = "256771236219"; // Replace with company WhatsApp number
-    const message = "Hello, I would like to inquire about your services.";
+    const phone = "256771236219";
+    const msg = "Hello, I would like to inquire about your services.";
     return isMobile()
-      ? `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
-      : `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+      ? `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`
+      : `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg)}`;
   };
 
   if (posts.length === 0) return <p className="text-center">Loading...</p>;
 
-  // Apply category filter if one is set
   const filteredPosts = categoryFilter
     ? posts.filter(
         (post) =>
@@ -59,48 +139,48 @@ const HomePage = () => {
       </p>
     );
 
-  // Featured section
+  /* ------------------------------
+     Featured + Side Feature
+  ------------------------------ */
   const featured = filteredPosts[0];
   const sideFeatures = filteredPosts.slice(1, 3);
-
-  // Remaining posts after featured & side features
   const remainingPosts = filteredPosts.slice(3);
 
-  // Trending - top by views
+  /* ------------------------------
+     Trending / Recently / Latest
+  ------------------------------ */
   const trendingPosts = [...remainingPosts]
     .sort((a, b) => b.views - a.views)
-    .slice(0, 6);
+    .slice(0, 100);
 
-  // Recently - top 2 by createdAt
   const recentlyPosts = [...remainingPosts]
     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 2);
+    .slice(0, 10);
 
-  // Latest - remaining posts after Recently
   const latestPosts = remainingPosts.filter(
     (p) => !recentlyPosts.includes(p)
-  ).slice(0, 5);
+  );
 
+  /* ------------------------------
+     Render Page
+  ------------------------------ */
   return (
     <Container fluid className="nilepost-home mt-4">
-      {/* SECTION 1 - Featured */}
+      {/* ============================  
+            SECTION 1 — FEATURED
+      ============================ */}
       <Row>
-        {/* Big Featured Story */}
         <Col lg={8} md={12}>
           <Card className="featured-card mb-4">
-            <div className="featured-media-container">
-              <img
-                src={
-                  getMediaUrl(featured.imagePath) ||
-                  "https://via.placeholder.com/800x400?text=No+Image"
-                }
-                alt={featured.title}
+            <div className="featured-media-container" style={{ height: "420px" }}>
+              <MediaRenderer
+                imageSrc={getMediaUrl(featured.imagePath)}
+                videoSrc={getMediaUrl(featured.videoPath)}
                 className="featured-image"
               />
+
               <div className="featured-overlay">
-                <span className="category-badge">
-                  {featured.category || "News"}
-                </span>
+                <span className="category-badge">{featured.category}</span>
                 <h2 className="featured-title">{featured.title}</h2>
                 <p className="featured-description">
                   {featured.description?.substring(0, 150)}...
@@ -113,22 +193,17 @@ const HomePage = () => {
           </Card>
         </Col>
 
-        {/* Side Featured Stories */}
         <Col lg={4} md={12}>
           <div className="side-featured-list">
             {sideFeatures.map((post) => (
               <Card className="side-featured mb-3" key={post.id}>
                 <Row>
-                  <Col xs={5}>
-                    <img
-                      src={
-                        getMediaUrl(post.imagePath) ||
-                        "https://via.placeholder.com/200x120?text=No+Image"
-                      }
-                      alt={post.title}
+                  <Col xs={5} style={{ maxHeight: 120, overflow: "hidden" }}>
+                    <MediaRenderer
+                      imageSrc={getMediaUrl(post.imagePath)}
+                      videoSrc={getMediaUrl(post.videoPath)}
                       className="side-featured-img"
                     />
-                    {/*  */}
                   </Col>
                   <Col xs={7}>
                     <Link to={`/post/${post.id}`} className="side-featured-title">
@@ -145,7 +220,7 @@ const HomePage = () => {
         </Col>
       </Row>
 
-      {/* Floating WhatsApp Contact Button */}
+      {/* Floating WhatsApp Button */}
       <div className="floating-whatsapp">
         <a
           href={getWhatsAppUrl()}
@@ -157,23 +232,25 @@ const HomePage = () => {
         </a>
       </div>
 
-      {/* SECTION 2 - Trending / Recently / Latest */}
+      {/* ============================
+          SECTION 2 — TRENDING etc.
+      ============================ */}
       <Row className="mt-5 section2">
-        {/* Trending - Left */}
-        <Col lg={3} md={6} className="sidebar">
+        {/* Trending */}
+        <Col lg={3} md={6}>
           <h4 className="sidebar-title">Trending</h4>
           <div className="trending-list">
             {trendingPosts.map((post, index) => (
               <div className="trending-item" key={post.id}>
                 <div className="trending-rank">{index + 1}</div>
-                <div className="trending-thumb">
-                  <img
-                    src={
-                      post.imagePath
-                        ? getMediaUrl(post.imagePath)
-                        : "https://via.placeholder.com/60x60?text=No+Img"
-                    }
-                    alt={post.title}
+                <div
+                  className="trending-thumb"
+                  style={{ width: 60, height: 60, overflow: "hidden" }}
+                >
+                  <MediaRenderer
+                    imageSrc={getMediaUrl(post.imagePath)}
+                    videoSrc={getMediaUrl(post.videoPath)}
+                    className="w-100 h-100"
                   />
                 </div>
                 <div className="trending-content">
@@ -189,27 +266,23 @@ const HomePage = () => {
           </div>
         </Col>
 
-        {/* Recently - Center */}
+        {/* Recently */}
         <Col lg={6} md={12}>
           <h4 className="sidebar-title">Recently</h4>
           <div className="recently-list">
             {recentlyPosts.map((post, index) => (
               <div
-                className={`recently-item ${
-                  index === 0 ? "recently-featured" : ""
-                }`}
+                className={`recently-item ${index === 0 ? "recently-featured" : ""}`}
                 key={post.id}
               >
-                <div className="recently-thumb">
-                  <img
-                    src={
-                      post.imagePath
-                        ? getMediaUrl(post.imagePath)
-                        : "https://via.placeholder.com/160x100?text=No+Img"
-                    }
-                    alt={post.title}
+                <div style={{ maxHeight: 140, overflow: "hidden" }}>
+                  <MediaRenderer
+                    imageSrc={getMediaUrl(post.imagePath)}
+                    videoSrc={getMediaUrl(post.videoPath)}
+                    className="w-50 h-50"
                   />
                 </div>
+
                 <div className="recently-content">
                   <Link
                     to={`/post/${post.id}`}
@@ -219,9 +292,7 @@ const HomePage = () => {
                   >
                     {post.title}
                   </Link>
-                  <p className="recently-desc">
-                    {post.description?.substring(0, 100)}...
-                  </p>
+                  <p>{post.description?.substring(0, 100)}...</p>
                   <div className="recently-meta">
                     {new Date(post.createdAt).toLocaleDateString()}
                   </div>
@@ -231,22 +302,22 @@ const HomePage = () => {
           </div>
         </Col>
 
-        {/* Latest - Right */}
-        <Col lg={3} md={6} className="sidebar">
+        {/* Latest */}
+        <Col lg={3} md={6}>
           <h4 className="sidebar-title">Latest</h4>
           <div className="latest-list">
             {latestPosts.map((post) => (
               <div className="latest-item" key={post.id}>
-                <div className="latest-thumb">
-                  <img
-                    src={
-                      post.imagePath
-                        ? getMediaUrl(post.imagePath)
-                        : "https://via.placeholder.com/70x50?text=No+Img"
-                    }
-                    alt={post.title}
+                <div
+                  className="latest-thumb"
+                  style={{ width: 70, height: 50, overflow: "hidden" }}
+                >
+                  <MediaRenderer
+                    imageSrc={getMediaUrl(post.imagePath)}
+                    videoSrc={getMediaUrl(post.videoPath)}
                   />
                 </div>
+
                 <div className="latest-content">
                   <Link to={`/post/${post.id}`} className="latest-title-link">
                     {post.title}
@@ -261,50 +332,44 @@ const HomePage = () => {
         </Col>
       </Row>
 
-      {/* SECTION 3 - Category Blocks */}
-      {["Politics", "Business", "Health", "Education", "Sports"].map(
-        (category) => {
-          const catPosts = posts.filter(
-            (p) => p.category?.toLowerCase() === category.toLowerCase()
-          );
-          if (catPosts.length === 0) return null;
+      {/* ============================
+          SECTION 3 — CATEGORY BLOCKS
+      ============================ */}
+      {["Politics", "Business", "Health", "Education","Technology", "Sports"].map((category) => {
+        const catPosts = posts.filter(
+          (p) => p.category?.toLowerCase() === category.toLowerCase()
+        );
+        if (catPosts.length === 0) return null;
 
-          return (
-            <div className="category-section mt-5" key={category}>
-              <h3 className="category-heading">{category}</h3>
-              <Row>
-                {catPosts.slice(0, 4).map((post) => (
-                  <Col md={6} lg={3} className="mb-4" key={post.id}>
-                    <Card className="news-card">
-                      <div className="news-image-wrapper">
-                        <img
-                          src={
-                            getMediaUrl(post.imagePath) ||
-                            "https://via.placeholder.com/400x200?text=No+Image"
-                          }
-                          alt={post.title}
-                          className="news-image"
-                        />
-                      </div>
-                      <Card.Body>
-                        <Link
-                          to={`/post/${post.id}`}
-                          className="news-title d-block mb-2"
-                        >
-                          {post.title}
-                        </Link>
-                        <small className="text-muted">
-                          {new Date(post.createdAt).toLocaleDateString()}
-                        </small>
-                      </Card.Body>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
-            </div>
-          );
-        }
-      )}
+        return (
+          <div className="category-section mt-5" key={category}>
+            <h3 className="category-heading">{category}</h3>
+            <Row>
+              {catPosts.slice(0, 4).map((post) => (
+                <Col md={6} lg={3} className="mb-4" key={post.id}>
+                  <Card className="news-card">
+                    <div style={{ height: 180, overflow: "hidden" }}>
+                      <MediaRenderer
+                        imageSrc={getMediaUrl(post.imagePath)}
+                        videoSrc={getMediaUrl(post.videoPath)}
+                        className="news-image"
+                      />
+                    </div>
+                    <Card.Body>
+                      <Link to={`/post/${post.id}`} className="news-title d-block mb-2">
+                        {post.title}
+                      </Link>
+                      <small className="text-muted">
+                        {new Date(post.createdAt).toLocaleDateString()}
+                      </small>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </div>
+        );
+      })}
     </Container>
   );
 };
