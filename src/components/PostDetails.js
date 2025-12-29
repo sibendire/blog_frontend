@@ -14,7 +14,7 @@ const PostDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/posts/blog/${id}`)
+      .get(`https://blog-backend-19.onrender.com/api/posts/blog/${id}`)
       .then((res) => {
         setPost(res.data);
         fetchRelated(res.data.category, res.data.id);
@@ -24,7 +24,7 @@ const PostDetails = () => {
 
   const fetchRelated = (category, postId) => {
     axios
-      .get(`http://localhost:8080/api/posts/blog/category/${category}`)
+      .get(`https://blog-backend-19.onrender.com/api/posts/blog/category/${category}`)
       .then((res) => {
         const related = res.data.filter((p) => p.id !== postId).slice(0, 4);
         setRelatedPosts(related);
@@ -33,7 +33,7 @@ const PostDetails = () => {
 
   const handleLike = () => {
     axios
-      .put(`http://localhost:8080/api/posts/blog/${id}/like`)
+      .put(`https://blog-backend-19.onrender.com/api/posts/blog/${id}/like`)
       .then((res) => setPost((prev) => ({ ...prev, likes: res.data.likes })));
   };
 
@@ -68,7 +68,7 @@ const PostDetails = () => {
       {post.imagePath && (
         <div className="post-hero">
           <img
-            src={`http://localhost:8080${post.imagePath}`}
+            src={`https://blog-backend-19.onrender.com${post.imagePath}`}
             alt={post.title}
             className="post-hero-img"
           />
@@ -92,7 +92,7 @@ const PostDetails = () => {
           <div className="post-video">
             <video controls>
               <source
-                src={`http://localhost:8080${post.videoPath}`}
+                src={`https://blog-backend-19.onrender.com${post.videoPath}`}
                 type="video/mp4"
               />
             </video>
