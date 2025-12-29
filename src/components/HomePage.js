@@ -95,7 +95,7 @@ const HomePage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8080/api/posts/blog")
+      .get("https://blog-backend-19.onrender.com/api/posts/blog")
       .then((res) => {
         const sorted = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -105,12 +105,16 @@ const HomePage = () => {
       .catch((err) => console.error("Error fetching posts:", err));
   }, []);
 
-  const getMediaUrl = (filePath) =>
-    filePath
-      ? filePath.startsWith("/")
-        ? `http://localhost:8080${filePath}`
-        : `http://localhost:8080/uploads/${filePath}`
-      : null;
+  
+ const BACKEND_URL = "https://blog-backend-19.onrender.com";
+
+const getMediaUrl = (filePath) =>
+  filePath
+    ? filePath.startsWith("/")
+      ? `${BACKEND_URL}${filePath}`
+      : `${BACKEND_URL}/uploads/${filePath}`
+    : null;
+
 
   const isMobile = () =>
     /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
@@ -324,7 +328,7 @@ const HomePage = () => {
                   </Link>
                   <div className="latest-meta">
                     {new Date(post.createdAt).toLocaleDateString()}
-                  </div>
+                  </div> 
                 </div>
               </div>
             ))}
