@@ -147,7 +147,7 @@ const PostDetails = () => {
               <div key={rel.id} className="related-card">
                 {rel.imagePath && (
                   <img
-                    src={`http://localhost:8080${rel.imagePath}`}
+                    src={`https://blog-backend-19.onrender.com${rel.imagePath}`}
                     alt={rel.title}
                     className="related-img"
                   />
