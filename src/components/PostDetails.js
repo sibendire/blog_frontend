@@ -14,7 +14,7 @@ const PostDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`https://blog-backend-19.onrender.com/api/posts/blog/${id}`)
+      .get(`http://localhost:8080/api/posts/blog/${id}`)
       .then((res) => {
         setPost(res.data);
         fetchRelated(res.data.category, res.data.id);
@@ -24,7 +24,7 @@ const PostDetails = () => {
 
   const fetchRelated = (category, postId) => {
     axios
-      .get(`https://blog-backend-19.onrender.com/api/posts/blog/category/${category}`)
+      .get(`http://localhost:8080/api/posts/blog/category/${category}`)
       .then((res) => {
         const related = res.data.filter((p) => p.id !== postId).slice(0, 4);
         setRelatedPosts(related);
@@ -33,7 +33,7 @@ const PostDetails = () => {
 
   const handleLike = () => {
     axios
-      .put(`https://blog-backend-19.onrender.com/api/posts/blog/${id}/like`)
+      .put(`http://localhost:8080/api/posts/blog/${id}/like`)
       .then((res) => setPost((prev) => ({ ...prev, likes: res.data.likes })));
   };
 
