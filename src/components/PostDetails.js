@@ -68,7 +68,7 @@ const PostDetails = () => {
       {post.imagePath && (
         <div className="post-hero">
           <img
-            src={`https://blog-backend-19.onrender.com${post.imagePath}`}
+            src={`http://localhost:8080${post.imagePath}`}
             alt={post.title}
             className="post-hero-img"
           />
@@ -92,7 +92,7 @@ const PostDetails = () => {
           <div className="post-video">
             <video controls>
               <source
-                src={`https://blog-backend-19.onrender.com${post.videoPath}`}
+                src={`http://localhost:8080${post.videoPath}`}
                 type="video/mp4"
               />
             </video>
@@ -147,7 +147,7 @@ const PostDetails = () => {
               <div key={rel.id} className="related-card">
                 {rel.imagePath && (
                   <img
-                    src={`https://blog-backend-19.onrender.com${rel.imagePath}`}
+                    src={`http://localhost:8080${rel.imagePath}`}
                     alt={rel.title}
                     className="related-img"
                   />
