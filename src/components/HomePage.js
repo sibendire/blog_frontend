@@ -95,7 +95,7 @@ const HomePage = () => {
 
   useEffect(() => {
     axios
-      .get("https://blog-backend-19.onrender.com/api/posts/blog")
+      .get("https://blog-backend-21.onrender.com/api/posts/blog")
       .then((res) => {
         const sorted = res.data.sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
@@ -106,7 +106,7 @@ const HomePage = () => {
   }, []);
 
   
- const BACKEND_URL = "https://blog-backend-19.onrender.com";
+ const BACKEND_URL = "https://blog-backend-21.onrender.com";
 
 const getMediaUrl = (filePath) =>
   filePath
