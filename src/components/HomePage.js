@@ -106,14 +106,16 @@ const HomePage = () => {
   }, []);
 
   
- const BACKEND_URL = "https://blog-backend-21.onrender.com";
+const getMediaUrl = (url) => {
+  if (!url) return null;
 
-const getMediaUrl = (filePath) =>
-  filePath
-    ? filePath.startsWith("/")
-      ? `${BACKEND_URL}${filePath}`
-      : `${BACKEND_URL}/uploads/${filePath}`
-    : null;
+  // Cloudinary or any external URL
+  if (url.startsWith("http")) return url;
+
+  // (Only needed if you ever fallback to local files)
+  return `https://blog-backend-21.onrender.com${url}`;
+};
+
 
 
   const isMobile = () =>
