@@ -39,9 +39,13 @@ function PostForm({ onPostCreated }) {
       if (image) formData.append("image", image);
       if (video) formData.append("video", video);
 
-      const response = await axios.post( "https://blog-backend-21.onrender.com/api/posts/blog", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+await axios.post(
+  "https://blog-backend-21.onrender.com/api/posts/blog/multipart",
+  formData,
+  { withCredentials: true }
+);
+
+
 
       onPostCreated(response.data);
 
