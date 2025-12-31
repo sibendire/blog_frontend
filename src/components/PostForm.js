@@ -29,42 +29,39 @@ function PostForm({ onPostCreated }) {
     setVideoPreview(file ? URL.createObjectURL(file) : null);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("category", category);
-      if (image) formData.append("image", image);
-      if (video) formData.append("video", video);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("category", category);
+    if (image) formData.append("image", image);
+    if (video) formData.append("video", video);
 
-await axios.post(
-  "https://blog-backend-21.onrender.com/api/posts/blog/multipart",
-  formData,
-  { withCredentials: true }
-);
+    const response = await axios.post(
+      "https://blog-backend-21.onrender.com/api/posts/blog/multipart",
+      formData,
+      { withCredentials: true }
+    );
 
+    onPostCreated(response.data);
 
+    setTitle("");
+    setDescription("");
+    setCategory("");
+    setImage(null);
+    setVideo(null);
+    setImagePreview(null);
+    setVideoPreview(null);
 
-      onPostCreated(response.data);
+    setShowSuccess(true);
+  } catch (error) {
+    console.error("Error uploading post:", error);
+    alert("Failed to create post. Check console for details.");
+  }
+};
 
-      // Reset form
-      setTitle("");
-      setDescription("");
-      setCategory("");
-      setImage(null);
-      setVideo(null);
-      setImagePreview(null);
-      setVideoPreview(null);
-
-      // ✅ Show success popup
-      setShowSuccess(true);
-    } catch (error) {
-      console.error("Error uploading post:", error);
-      alert("Failed to create post. Check console for details.");
-    }
-  };
 
   // ✅ Auto redirect after 2 seconds when success is shown
   useEffect(() => {
