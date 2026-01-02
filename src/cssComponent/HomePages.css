@@ -493,11 +493,7 @@ body {
   gap: 12px;
 }
 .recently-posted{
-    font-size: 1.5rem;
-  font-weight: 800;
-  color: #d62828;
-  width: 28px;
-  text-align: center;
+  
 }
 .latest-item {
   display: flex;
