@@ -250,8 +250,8 @@ const getMediaUrl = (url) => {
               <div className="trending-item" key={post.id}>
                 <div className="trending-rank">{index + 1}</div>
                 <div
-                  className="trending-thumb"
-                  style={{ width: 60, height: 60, overflow: "hidden" }}
+                  className="trending-thumb"ss
+                  style={{ width: "150px", overflow: "hidden" }}
                 >
                   <MediaRenderer
                     imageSrc={getMediaUrl(post.imagePath)}
@@ -285,7 +285,7 @@ const getMediaUrl = (url) => {
                   <MediaRenderer
                     imageSrc={getMediaUrl(post.imagePath)}
                     videoSrc={getMediaUrl(post.videoPath)}
-                    className="w-50 h-50"
+                    className="w-full h-70"
                   />
                 </div>
 
