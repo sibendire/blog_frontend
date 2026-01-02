@@ -99,7 +99,7 @@ const PostDetails = () => {
     )}&url=${encodeURIComponent(currentUrl)}`;
 
   const getWhatsAppShareUrl = () => {
-    const phone = "256700000000";
+    const phone = "256771236219";
     const message = `${post?.title} - ${currentUrl}`;
     return isMobile()
       ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
