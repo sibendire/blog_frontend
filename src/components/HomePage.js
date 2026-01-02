@@ -298,7 +298,7 @@ const getMediaUrl = (url) => {
                   >
                     {post.title}
                   </Link>
-                  <p>{post.description?.substring(0, 100)}...</p>
+                  <p className="recently-posted">{post.description?.substring(0, 100)}...</p>
                   <div className="recently-meta">
                     {new Date(post.createdAt).toLocaleDateString()}
                   </div>
