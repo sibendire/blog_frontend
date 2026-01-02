@@ -4,81 +4,128 @@ import axios from "axios";
 import "../cssComponent/PostDetails.css";
 import { FaFacebookF, FaTwitter, FaWhatsapp } from "react-icons/fa";
 
+/* =========================
+   API BASE
+========================= */
+const API_BASE = "https://blog-backend-21.onrender.com";
+
+/* =========================
+   MEDIA URL HELPER
+========================= */
+const getMediaUrl = (url) => {
+  if (!url) return null;
+  if (url.startsWith("http")) return url;
+  return `${API_BASE}${url}`;
+};
+
 const PostDetails = () => {
   const { id } = useParams();
   const location = useLocation();
+
   const [post, setPost] = useState(null);
   const [relatedPosts, setRelatedPosts] = useState([]);
 
   const currentUrl = window.location.origin + location.pathname;
 
+  /* =========================
+     FETCH POST
+  ========================= */
   useEffect(() => {
     axios
-      .get(`https://blog-backend-21.onrender.com/api/posts/blog/${id}`)
+      .get(`${API_BASE}/api/posts/blog/${id}`)
       .then((res) => {
         setPost(res.data);
         fetchRelated(res.data.category, res.data.id);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Post fetch error:", err));
   }, [id]);
 
+  /* =========================
+     FETCH RELATED POSTS
+  ========================= */
   const fetchRelated = (category, postId) => {
+    if (!category) return;
+
     axios
-      .get(`https://blog-backend-21.onrender.com/api/posts/blog/category/${category}`)
+      .get(
+        `${API_BASE}/api/posts/blog/category/${category.toLowerCase()}`
+      )
       .then((res) => {
-        const related = res.data.filter((p) => p.id !== postId).slice(0, 4);
+        const related = res.data
+          .filter((p) => p.id !== postId)
+          .slice(0, 4);
         setRelatedPosts(related);
-      });
+      })
+      .catch((err) => console.error("Related fetch error:", err));
   };
 
+  /* =========================
+     LIKE POST
+  ========================= */
   const handleLike = () => {
     axios
-      .put(`https://blog-backend-21.onrender.com/api/posts/blog/${id}/like`)
-      .then((res) => setPost((prev) => ({ ...prev, likes: res.data.likes })));
+      .put(`${API_BASE}/api/posts/blog/${id}/like`)
+      .then((res) =>
+        setPost((prev) => ({ ...prev, likes: res.data.likes }))
+      );
   };
 
-  // Detect mobile device
-  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  /* =========================
+     SHARE HELPERS
+  ========================= */
+  const isMobile = () =>
+    /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-  // Share URLs
-  const getFacebookShareUrl = () => {
-    const url = encodeURIComponent(currentUrl);
-    return `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-  };
+  const getFacebookShareUrl = () =>
+    `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      currentUrl
+    )}`;
 
-  const getTwitterShareUrl = () => {
-    const text = encodeURIComponent(post?.title || "");
-    const url = encodeURIComponent(currentUrl);
-    return `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
-  };
+  const getTwitterShareUrl = () =>
+    `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      post?.title || ""
+    )}&url=${encodeURIComponent(currentUrl)}`;
 
   const getWhatsAppShareUrl = () => {
-    const companyNumber = "256700000000"; // <- Replace with company WhatsApp number
+    const phone = "256700000000";
     const message = `${post?.title} - ${currentUrl}`;
     return isMobile()
-      ? `https://wa.me/${companyNumber}?text=${encodeURIComponent(message)}`
-      : `https://web.whatsapp.com/send?phone=${companyNumber}&text=${encodeURIComponent(message)}`;
+      ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+      : `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(
+          message
+        )}`;
   };
 
   if (!post) return <div className="loading">Loading...</div>;
 
   return (
     <div className="post-details-container">
-      {/* Hero Image */}
-      {post.imagePath && (
-        <div className="post-hero">
+      {/* =========================
+          HERO MEDIA
+      ========================= */}
+      <div className="post-hero">
+        {post.videoPath ? (
+          <video
+            src={getMediaUrl(post.videoPath)}
+            controls
+            className="post-hero-img"
+          />
+        ) : (
           <img
-            src={`http://localhost:8080${post.imagePath}`}
+            src={getMediaUrl(post.imagePath)}
             alt={post.title}
             className="post-hero-img"
           />
-          <span className="post-category">{post.category}</span>
-        </div>
-      )}
+        )}
+        <span className="post-category">{post.category}</span>
+      </div>
 
-      {/* Post Content */}
+      {/* =========================
+          CONTENT
+      ========================= */}
       <div className="post-content">
         <h1 className="post-title">{post.title}</h1>
+
         <p className="post-meta">
           {new Date(post.createdAt).toLocaleDateString(undefined, {
             year: "numeric",
@@ -86,31 +133,23 @@ const PostDetails = () => {
             day: "numeric",
           })}
         </p>
+
         <div className="post-description">{post.description}</div>
 
-        {post.videoPath && (
-          <div className="post-video">
-            <video controls>
-              <source
-                src={`http://localhost:8080${post.videoPath}`}
-                type="video/mp4"
-              />
-            </video>
-          </div>
-        )}
-
-        {/* Post Actions */}
         <div className="post-actions">
           <button className="like-btn" onClick={handleLike}>
             ❤️ {post.likes || 0}
           </button>
+
           <Link to="/" className="back-home-btn">
             ← Back to Home
           </Link>
         </div>
       </div>
 
-      {/* Floating Share Buttons */}
+      {/* =========================
+          SHARE BUTTONS
+      ========================= */}
       <div className="floating-share-buttons">
         <a
           href={getFacebookShareUrl()}
@@ -138,22 +177,27 @@ const PostDetails = () => {
         </a>
       </div>
 
-      {/* Related Posts */}
+      {/* =========================
+          RELATED POSTS
+      ========================= */}
       {relatedPosts.length > 0 && (
         <div className="related-posts">
           <h3>Related Posts</h3>
+
           <div className="related-grid">
             {relatedPosts.map((rel) => (
               <div key={rel.id} className="related-card">
-                {rel.imagePath && (
-                  <img
-                    src={`http://localhost:8080${rel.imagePath}`}
-                    alt={rel.title}
-                    className="related-img"
-                  />
-                )}
+                <img
+                  src={getMediaUrl(rel.imagePath)}
+                  alt={rel.title}
+                  className="related-img"
+                />
+
                 <div className="related-info">
-                  <Link to={`/post/${rel.id}`} className="related-title">
+                  <Link
+                    to={`/post/${rel.id}`}
+                    className="related-title"
+                  >
                     {rel.title}
                   </Link>
                   <p className="related-meta">
