@@ -66,9 +66,9 @@ function CollapsibleBlog() {
              <Nav.Link as={Link} to="/login">
               Login
             </Nav.Link> */}
-            <Nav.Link as={Link} to="/contact">
+            {/* <Nav.Link as={Link} to="/contact">
               Contact
-            </Nav.Link>
+            </Nav.Link> */}
             <Nav.Link as={Link} to="/new" className="btn-post">
               ✍️ Post
             </Nav.Link>
