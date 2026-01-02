@@ -30,15 +30,27 @@ const PostDetails = () => {
   /* =========================
      FETCH POST
   ========================= */
-  useEffect(() => {
-    axios
-      .get(`${API_BASE}/api/posts/blog/${id}`)
-      .then((res) => {
-        setPost(res.data);
-        fetchRelated(res.data.category, res.data.id);
-      })
-      .catch((err) => console.error("Post fetch error:", err));
-  }, [id]);
+ useEffect(() => {
+  axios
+    .get(`${API_BASE}/api/posts/blog`)
+    .then((res) => {
+      const foundPost = res.data.find(
+        (p) => String(p.id) === String(id)
+      );
+
+      if (!foundPost) {
+        console.error("Post not found");
+        return;
+      }
+
+      setPost(foundPost);
+      fetchRelated(foundPost.category, foundPost.id);
+    })
+    .catch((err) =>
+      console.error("Post fetch error:", err)
+    );
+}, [id]);
+
 
   /* =========================
      FETCH RELATED POSTS
