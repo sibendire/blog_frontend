@@ -100,6 +100,13 @@ body {
   overflow: hidden;
 }
 
+.recently-posted{
+  margin-top: 0;
+  margin-bottom: 1rem;
+  text-align: left;
+  color: #CCC;
+}
+
 .news-image {
   width: 100%;
   height: 100%;
@@ -467,7 +474,8 @@ body {
 .recently-title-link {
   font-size: 1rem;
   font-weight: 700;
-  color: #fff;
+  color: red;
+
 }
 
 .recently-title-link:hover {
@@ -492,8 +500,9 @@ body {
   flex-direction: column;
   gap: 12px;
 }
-.recently-posted{
-  
+.recently-content{
+  display: flex;
+  flex-direction: row;
 }
 .latest-item {
   display: flex;

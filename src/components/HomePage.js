@@ -289,7 +289,7 @@ const getMediaUrl = (url) => {
                   />
                 </div>
 
-                <div className="recently-content">
+                <div className="recently-conten">
                   <Link
                     to={`/post/${post.id}`}
                     className={`recently-title-link ${
