@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import "../cssComponent/NavbarCustom.css";
 
 function CollapsibleBlog() {
+  const [expanded, setExpanded] = useState(false);
+
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const activeCategory = query.get("category");
@@ -21,7 +23,8 @@ function CollapsibleBlog() {
 
   return (
     <Navbar
-      collapseOnSelect
+      expanded={expanded}
+      onToggle={setExpanded}
       expand="lg"
       bg="dark"
       variant="dark"
@@ -29,15 +32,23 @@ function CollapsibleBlog() {
       className="news-navbar shadow-sm"
     >
       <Container>
-        <Navbar.Brand as={Link} to="/" className="news-logo">
+        <Navbar.Brand
+          as={Link}
+          to="/"
+          className="news-logo"
+          onClick={() => setExpanded(false)}
+        >
           GIDZ<span className="logo-highlight">POST</span>
         </Navbar.Brand>
+
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto nav-links">
             <Nav.Link
               as={Link}
               to="/"
+              onClick={() => setExpanded(false)}
               className={!activeCategory ? "active-category" : ""}
             >
               Home
@@ -48,8 +59,9 @@ function CollapsibleBlog() {
                 key={cat.path}
                 as={Link}
                 to={`/?category=${cat.path}`}
+                onClick={() => setExpanded(false)}
                 className={
-                  activeCategory === cat.path.toLowerCase()
+                  activeCategory === cat.path
                     ? "active-category"
                     : ""
                 }
@@ -60,16 +72,12 @@ function CollapsibleBlog() {
           </Nav>
 
           <Nav className="nav-right">
-         {/* <Nav.Link as={Link} to="/signup">
-              creat Account
-            </Nav.Link>
-             <Nav.Link as={Link} to="/login">
-              Login
-            </Nav.Link> */}
-            {/* <Nav.Link as={Link} to="/contact">
-              Contact
-            </Nav.Link> */}
-            <Nav.Link as={Link} to="/new" className="btn-post">
+            <Nav.Link
+              as={Link}
+              to="/new"
+              className="btn-post"
+              onClick={() => setExpanded(false)}
+            >
               ✍️ Post
             </Nav.Link>
           </Nav>
